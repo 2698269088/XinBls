@@ -10,7 +10,7 @@ import top.mcocet.xinbls.logger.LogCaptureHandler;
 public class XinBls implements Plugin {
     private LogFileManager logFileManager;
     private LogCaptureHandler logCaptureHandler;
-    private static final Logger logger = LoggerFactory.getLogger(LogFileManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(XinBls.class);
 
     @Override
     public String getName() {
@@ -20,7 +20,7 @@ public class XinBls implements Plugin {
 
     @Override
     public String getVersion() {
-        return "1.0";
+        return "1.1";
         // 返回插件版本
     }
 
