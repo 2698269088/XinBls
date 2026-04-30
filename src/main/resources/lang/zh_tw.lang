@@ -1,0 +1,37 @@
+# XinBls Language File - Chinese (Traditional)
+# Format: key=value
+
+xinbls.load=XinBls 插件正在載入...
+xinbls.enabled=日誌記錄器已初始化，日誌檔案: %s
+xinbls.enable.failed=初始化日誌記錄器失敗: %s
+xinbls.disable=XinBls 插件正在停用...
+xinbls.disable.failed=清理日誌記錄器失敗: %s
+xinbls.unload=XinBls 插件正在卸載...
+
+xinbls.event.player.join=玩家 %s 加入了遊戲
+xinbls.event.player.leave=玩家 %s 離開了遊戲
+xinbls.event.chat.public=[公共聊天] %s: %s
+xinbls.event.chat.private=[私聊] %s: %s
+xinbls.event.chat.system=[系統] %s
+xinbls.event.login.success=機器人登入成功
+xinbls.event.disconnect=斷開連線: %s
+
+xinbls.config.not_found=設定檔不存在，使用預設設定: %s
+xinbls.config.loaded=設定載入成功: %s
+xinbls.config.read.failed=讀取設定檔失敗: %s
+xinbls.config.parse.failed=解析設定檔失敗: %s
+xinbls.config.using_default=使用預設設定
+xinbls.config.saved=設定儲存成功: %s
+xinbls.config.save.failed=儲存設定檔失敗: %s
+
+xinbls.log.dir.created=建立日誌目錄: %s
+xinbls.log.dir.failed=建立日誌目錄失敗: %s
+xinbls.log.file.created=建立新日誌檔案: %s
+xinbls.log.file.open.failed=開啟日誌檔案失敗: %s
+xinbls.log.file.parse.failed=解析日誌檔案名稱失敗: %s, 錯誤: %s
+xinbls.log.line.count.failed=計算檔案行數失敗: %s
+xinbls.log.write.failed=寫入日誌失敗: %s
+xinbls.log.file.close.failed=關閉舊日誌檔案失敗: %s
+xinbls.log.file.deleted=已刪除舊日誌檔案: %s
+xinbls.log.file.delete.failed=刪除舊日誌檔案失敗: %s
+xinbls.log.file.delete.security=安全性例外，無法刪除日誌檔案: %s

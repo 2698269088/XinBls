@@ -1,0 +1,37 @@
+# XinBls Language File - English (US)
+# Format: key=value
+
+xinbls.load=XinBls plugin is loading...
+xinbls.enabled=Logger initialized, log file: %s
+xinbls.enable.failed=Failed to initialize logger: %s
+xinbls.disable=XinBls plugin is disabling...
+xinbls.disable.failed=Failed to cleanup logger: %s
+xinbls.unload=XinBls plugin is unloading...
+
+xinbls.event.player.join=Player %s joined the game
+xinbls.event.player.leave=Player %s left the game
+xinbls.event.chat.public=[Public] %s: %s
+xinbls.event.chat.private=[Private] %s: %s
+xinbls.event.chat.system=[System] %s
+xinbls.event.login.success=Bot logged in successfully
+xinbls.event.disconnect=Disconnected: %s
+
+xinbls.config.not_found=Config file not found, using defaults: %s
+xinbls.config.loaded=Config loaded successfully: %s
+xinbls.config.read.failed=Failed to read config file: %s
+xinbls.config.parse.failed=Failed to parse config file: %s
+xinbls.config.using_default=Using default config
+xinbls.config.saved=Config saved successfully: %s
+xinbls.config.save.failed=Failed to save config file: %s
+
+xinbls.log.dir.created=Created log directory: %s
+xinbls.log.dir.failed=Failed to create log directory: %s
+xinbls.log.file.created=Created new log file: %s
+xinbls.log.file.open.failed=Failed to open log file: %s
+xinbls.log.file.parse.failed=Failed to parse log file name: %s, error: %s
+xinbls.log.line.count.failed=Failed to count file lines: %s
+xinbls.log.write.failed=Failed to write log: %s
+xinbls.log.file.close.failed=Failed to close old log file: %s
+xinbls.log.file.deleted=Deleted old log file: %s
+xinbls.log.file.delete.failed=Failed to delete old log file: %s
+xinbls.log.file.delete.security=Security exception, cannot delete log file: %s

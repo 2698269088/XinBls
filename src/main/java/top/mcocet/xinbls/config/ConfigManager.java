@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.mcocet.xinbls.logger.LogFileManager;
+import xin.bbtt.mcbot.LangManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +75,7 @@ public class ConfigManager {
         File configFile = new File(configPath);
         
         if (!configFile.exists()) {
-            logger.info("配置文件不存在，使用默认配置: " + configPath);
+            logger.info(LangManager.get("xinbls.config.not_found", configPath));
             saveConfig(); // 保存默认配置到文件
             return;
         }
@@ -93,13 +93,13 @@ public class ConfigManager {
             this.skipMessagesWithTo = loadedConfig.skipMessagesWithTo;
             this.skipMessagesWithBracketPrefix = loadedConfig.skipMessagesWithBracketPrefix;
             
-            logger.info("配置加载成功: " + configPath);
+            logger.info(LangManager.get("xinbls.config.loaded", configPath));
         } catch (IOException e) {
-            logger.error("读取配置文件失败: " + configPath, e);
-            logger.info("使用默认配置");
+            logger.error(LangManager.get("xinbls.config.read.failed", configPath), e);
+            logger.info(LangManager.get("xinbls.config.using_default"));
         } catch (Exception e) {
-            logger.error("解析配置文件失败: " + configPath, e);
-            logger.info("使用默认配置");
+            logger.error(LangManager.get("xinbls.config.parse.failed", configPath), e);
+            logger.info(LangManager.get("xinbls.config.using_default"));
         }
     }
     
@@ -119,9 +119,9 @@ public class ConfigManager {
             String json = gson.toJson(this);
             
             Files.write(Paths.get(configPath), json.getBytes("UTF-8"));
-            logger.info("配置保存成功: " + configPath);
+            logger.info(LangManager.get("xinbls.config.saved", configPath));
         } catch (IOException e) {
-            logger.error("保存配置文件失败: " + configPath, e);
+            logger.error(LangManager.get("xinbls.config.save.failed", configPath), e);
         }
     }
     

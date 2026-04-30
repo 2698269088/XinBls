@@ -3,6 +3,7 @@ package top.mcocet.xinbls.logger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.mcocet.xinbls.config.ConfigManager;
+import xin.bbtt.mcbot.LangManager;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -50,10 +51,10 @@ public class LogFileManager {
         try {
             if (!Files.exists(logDirPath)) {
                 Files.createDirectories(logDirPath);
-                logger.info("创建日志目录: " + LOG_DIR);
+                logger.info(LangManager.get("xinbls.log.dir.created", LOG_DIR));
             }
         } catch (Exception e) {
-            logger.error("创建日志目录失败: " + e.getMessage());
+            logger.error(LangManager.get("xinbls.log.dir.failed", e.getMessage()));
         }
     }
 
@@ -110,7 +111,7 @@ public class LogFileManager {
                         latestFile = file;
                     }
                 } catch (Exception e) {
-                    logger.warn("解析日志文件名失败: " + file.getName() + ", 错误: " + e.getMessage());
+                    logger.warn(LangManager.get("xinbls.log.file.parse.failed", file.getName(), e.getMessage()));
                 }
             }
         }
@@ -126,7 +127,7 @@ public class LogFileManager {
         String fileName = LOG_FILE_PREFIX + timestamp + LOG_FILE_SUFFIX;
         File newLogFile = new File(LOG_DIR, fileName);
 
-        logger.info("创建新的日志文件: " + newLogFile.getAbsolutePath());
+        logger.info(LangManager.get("xinbls.log.file.created", newLogFile.getAbsolutePath()));
         return newLogFile;
     }
 
@@ -148,7 +149,7 @@ public class LogFileManager {
                 true // auto-flush
             );
         } catch (Exception e) {
-            logger.error("打开日志文件失败: " + e.getMessage());
+            logger.error(LangManager.get("xinbls.log.file.open.failed", e.getMessage()));
         }
     }
 
@@ -160,7 +161,7 @@ public class LogFileManager {
             long count = reader.lines().count();
             return (int) count;
         } catch (Exception e) {
-            logger.warn("计算文件行数失败: " + e.getMessage());
+            logger.warn(LangManager.get("xinbls.log.line.count.failed", e.getMessage()));
             return 0;
         }
     }
@@ -189,7 +190,7 @@ public class LogFileManager {
                     currentLineCount++;
                 }
             } catch (Exception e) {
-                logger.error("写入日志失败: " + e.getMessage());
+                logger.error(LangManager.get("xinbls.log.write.failed", e.getMessage()));
             }
         }
     }
@@ -204,59 +205,19 @@ public class LogFileManager {
             return false;
         }
         
-        // 检查是否需要跳过包含“来自”的消息
-        if (configManager.isSkipMessagesWithFrom() && message.contains("[ChatMessagePrinter] 来自")) {
-            // 如果启用了中括号前缀检查，进一步检查中括号前缀
-            if (configManager.isSkipMessagesWithBracketPrefix() && hasBracketPrefix(message, "来自")) {
-                return true;
-            } else if (!configManager.isSkipMessagesWithBracketPrefix()) {
-                return true;
-            }
+        // 检查是否需要跳过包含"来自"的消息
+        if (configManager.isSkipMessagesWithFrom() && message.contains("来自")) {
+            return true;
         }
         
-        // 检查是否需要跳过包含“发至”的消息
-        if (configManager.isSkipMessagesWithTo() && message.contains("[ChatMessagePrinter] 发至")) {
-            // 如果启用了中括号前缀检查，进一步检查中括号前缀
-            if (configManager.isSkipMessagesWithBracketPrefix() && hasBracketPrefix(message, "发至")) {
-                return true;
-            } else if (!configManager.isSkipMessagesWithBracketPrefix()) {
-                return true;
-            }
+        // 检查是否需要跳过包含"发至"的消息
+        if (configManager.isSkipMessagesWithTo() && message.contains("发至")) {
+            return true;
         }
         
         return false;
     }
-    
-    /**
-     * 检查消息中是否包含字母数字中括号前缀
-     * @param message 要检查的消息
-     * @param keyword 要查找的关键字
-     * @return 如果关键字前面有包含字母数字的中括号则返回true
-     */
-    private boolean hasBracketPrefix(String message, String keyword) {
-        int keywordIndex = message.indexOf(keyword);
-        if (keywordIndex == -1) {
-            return false;
-        }
-        
-        // 在关键字前面寻找中括号
-        String beforeKeyword = message.substring(0, keywordIndex);
-        
-        // 查找最后一个中括号
-        int lastOpenBracket = beforeKeyword.lastIndexOf('[');
-        int lastCloseBracket = beforeKeyword.lastIndexOf(']');
-        
-        if (lastOpenBracket != -1 && lastCloseBracket != -1 && lastOpenBracket < lastCloseBracket) {
-            // 提取中括号内的内容
-            String bracketContent = beforeKeyword.substring(lastOpenBracket + 1, lastCloseBracket);
-            
-            // 检查中括号内容是否只包含字母和数字
-            return bracketContent.matches("^[a-zA-Z0-9]+$");
-        }
-        
-        return false;
-    }
-    
+
     /**
      * 移除ANSI颜色代码
      * @param input 包含ANSI颜色代码的字符串
@@ -275,34 +236,6 @@ public class LogFileManager {
     }
 
     /**
-     * 写入不带时间戳的日志（用于Logback捕获）
-     */
-    public void writeLogWithoutTimestamp(String logMessage) {
-        synchronized (lock) {
-            // 检查是否需要跳过特定消息
-            if (shouldSkipMessage(logMessage)) {
-                return; // 跳过写入此消息
-            }
-            
-            // 检查是否需要切换到新文件
-            if (currentLineCount >= configManager.getMaxLogLines()) {
-                switchToNewLogFile();
-            }
-
-            try {
-                if (currentWriter != null && logMessage != null && !logMessage.isEmpty()) {
-                    String cleanMessage = removeAnsiCodes(logMessage);
-                    currentWriter.println(cleanMessage);
-                    currentWriter.flush(); // 立即写入磁盘
-                    currentLineCount++;
-                }
-            } catch (Exception e) {
-                logger.error("写入日志失败: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
      * 切换到新的日志文件
      */
     private void switchToNewLogFile() {
@@ -311,7 +244,7 @@ public class LogFileManager {
                 currentWriter.close();
             }
         } catch (Exception e) {
-            logger.error("关闭旧日志文件失败: " + e.getMessage());
+            logger.error(LangManager.get("xinbls.log.file.close.failed", e.getMessage()));
         }
 
         this.currentLogFile = createNewLogFile();
@@ -347,13 +280,13 @@ public class LogFileManager {
                 if (!logFiles[i].equals(currentLogFile)) { // 确保不删除当前正在使用的文件
                     boolean deleted = logFiles[i].delete();
                     if (deleted) {
-                        logger.info("已删除旧日志文件: " + logFiles[i].getName());
+                        logger.info(LangManager.get("xinbls.log.file.deleted", logFiles[i].getName()));
                     } else {
-                        logger.warn("删除旧日志文件失败: " + logFiles[i].getName());
+                        logger.warn(LangManager.get("xinbls.log.file.delete.failed", logFiles[i].getName()));
                     }
                 }
             } catch (SecurityException e) {
-                logger.error("安全异常，无法删除日志文件: " + logFiles[i].getName(), e);
+                logger.error(LangManager.get("xinbls.log.file.delete.security", logFiles[i].getName()), e);
             }
         }
     }

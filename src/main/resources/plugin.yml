@@ -1,0 +1,4 @@
+name: XinBls
+version: 1.2
+main: top.mcocet.xinbls.XinBls
+depend: []
